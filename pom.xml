@@ -75,6 +75,13 @@
             <artifactId>oraclepki</artifactId>
             <version>23.4.0.24.05</version>
         </dependency>
+
+                <!-- GraphQL Java -->
+        <dependency>
+            <groupId>com.graphql-java</groupId>
+            <artifactId>graphql-java</artifactId>
+            <version>21.0</version>
+        </dependency>
         
       
     </dependencies>

@@ -3,15 +3,148 @@ package com.function;
 import com.microsoft.azure.functions.*;
 import com.microsoft.azure.functions.annotation.*;
 import java.util.Optional;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.context.ApplicationContext;
 import com.function.models.BodegaEntity;
 import com.function.models.BodegaRepository;
+import com.function.service.ProductoService;
+
+import graphql.ExecutionResult;
+import graphql.GraphQL;
+import graphql.Scalars;
+import graphql.schema.GraphQLList;
+import graphql.schema.GraphQLObjectType;
+import graphql.schema.GraphQLSchema;
 
 /**
  * Azure Functions with HTTP Trigger.
  */
 public class Function {
+    private static GraphQL graphQL;
+    private static ProductoService productoService;
+    static {
+        org.springframework.context.ApplicationContext ctx = SpringContextSingleton.getContext();
+        productoService = ctx.getBean(ProductoService.class);
+            GraphQLObjectType bodegaType = GraphQLObjectType.newObject()
+                .name("Bodega")
+                .field(field -> field.name("id").type(Scalars.GraphQLInt))
+                .field(field -> field.name("nombre").type(Scalars.GraphQLString))
+                .field(field -> field.name("direccion").type(Scalars.GraphQLString))
+                .build();
+
+            com.function.service.BodegaService bodegaService = ctx.getBean(com.function.service.BodegaService.class);
+
+        GraphQLObjectType productoType = GraphQLObjectType.newObject()
+            .name("Producto")
+            .field(field -> field.name("id").type(Scalars.GraphQLInt))
+            .field(field -> field.name("nombre").type(Scalars.GraphQLString))
+            .field(field -> field.name("stock").type(Scalars.GraphQLInt))
+            .field(field -> field.name("precio").type(Scalars.GraphQLInt))
+            .field(field -> field.name("bodega").type(bodegaType)
+                .dataFetcher(env -> {
+                    com.function.models.ProductoEntity producto = env.getSource();
+                    return producto.getBodega();
+                })
+            )
+            .build();
+
+           
+        GraphQLObjectType queryType = GraphQLObjectType.newObject()
+            .name("Query")
+            .field(field -> field
+                .name("productos")
+                .type(GraphQLList.list(productoType))
+                .dataFetcher(env -> {
+                    return productoService.findAll();
+                })
+            )
+                .field(field -> field
+                    .name("bodegas")
+                    .type(GraphQLList.list(bodegaType))
+                    .dataFetcher(env -> {
+                        return bodegaService.findAll();
+                    })
+                )
+            .build();
+
+        GraphQLSchema schema = GraphQLSchema.newSchema()
+            .query(queryType)
+            .build();
+
+        graphQL = GraphQL.newGraphQL(schema).build();
+    }
+
+    @FunctionName("getAllProductosGQ")
+    public HttpResponseMessage graphqlProductosEndpoint(
+            @HttpTrigger(
+                name = "req",
+                methods = {HttpMethod.POST},
+                authLevel = AuthorizationLevel.ANONYMOUS,
+                route = "graphql/productos") 
+            HttpRequestMessage<Optional<Map<String, Object>>> request,
+            final ExecutionContext context) {
+
+        context.getLogger().info("Procesando query GraphQL de productos...");
+
+        Map<String, Object> body = request.getBody().orElse(new HashMap<>());
+        String query = (String) body.get("query");
+
+        if (query == null || query.isEmpty()) {
+            return request.createResponseBuilder(HttpStatus.BAD_REQUEST)
+                .body(Map.of("error", "Falta la query en el body"))
+                .build();
+        }
+
+        if (!query.contains("productos")) {
+            return request.createResponseBuilder(HttpStatus.BAD_REQUEST)
+                .body(Map.of("error", "Solo se permiten consultas de productos en este endpoint"))
+                .build();
+        }
+
+        ExecutionResult executionResult = graphQL.execute(query);
+
+        return request.createResponseBuilder(HttpStatus.OK)
+            .body(executionResult.toSpecification())
+            .build();
+    }
+
+    @FunctionName("getAllBodegasGQ")
+    public HttpResponseMessage graphqlBodegasEndpoint(
+            @HttpTrigger(
+                name = "req",
+                methods = {HttpMethod.POST},
+                authLevel = AuthorizationLevel.ANONYMOUS,
+                route = "graphql/bodegas") 
+            HttpRequestMessage<Optional<Map<String, Object>>> request,
+            final ExecutionContext context) {
+
+        context.getLogger().info("Procesando query GraphQL de bodegas...");
+
+        Map<String, Object> body = request.getBody().orElse(new HashMap<>());
+        String query = (String) body.get("query");
+
+        if (query == null || query.isEmpty()) {
+            return request.createResponseBuilder(HttpStatus.BAD_REQUEST)
+                .body(Map.of("error", "Falta la query en el body"))
+                .build();
+        }
+
+        if (!query.contains("bodegas")) {
+            return request.createResponseBuilder(HttpStatus.BAD_REQUEST)
+                .body(Map.of("error", "Solo se permiten consultas de bodegas en este endpoint"))
+                .build();
+        }
+
+        ExecutionResult executionResult = graphQL.execute(query);
+
+        return request.createResponseBuilder(HttpStatus.OK)
+            .body(executionResult.toSpecification())
+            .build();
+    }
+
     @FunctionName("createProducto")
     public HttpResponseMessage createProducto(
             @HttpTrigger(
