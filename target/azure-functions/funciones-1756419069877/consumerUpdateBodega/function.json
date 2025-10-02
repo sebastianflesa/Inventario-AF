@@ -1,0 +1,9 @@
+{
+  "scriptFile" : "../funciones-1.0-SNAPSHOT.jar",
+  "entryPoint" : "com.function.Function.consumerUpdateBodega",
+  "bindings" : [ {
+    "type" : "eventGridTrigger",
+    "direction" : "in",
+    "name" : "event"
+  } ]
+}
