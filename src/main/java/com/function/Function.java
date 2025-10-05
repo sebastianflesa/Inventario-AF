@@ -30,6 +30,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class Function {
     private static ProductoService productoService;
 
+    String eventGridTopicEndpoint = "https://bodegas.eastus2-1.eventgrid.azure.net/api/events";
+    String eventGridTopicKey = "9SpxaQs41IUMY7lvVJRRIR2DNrjdUELMr7HRNRTL3VxkeRgGRTHUJQQJ99BJACHYHv6XJ3w3AAABAZEGsuDT";
+
     @FunctionName("createProducto")
     public HttpResponseMessage createProducto(
             @HttpTrigger(
@@ -330,14 +333,11 @@ public class Function {
         final ExecutionContext context) {
 
         context.getLogger().info("Java HTTP trigger processed a request to produce create producto event.");
-        String eventGridTopicEndpoint = null;
-        String eventGridTopicKey = null;
+        
         
         try {
             org.springframework.context.ApplicationContext springCtx = SpringContextSingleton.getContext();
-            EventGridConfig eventGridConfig = springCtx.getBean(EventGridConfig.class);
-            eventGridTopicEndpoint = eventGridConfig.getTopicEndpoint();
-            eventGridTopicKey = eventGridConfig.getTopicKey();
+
             context.getLogger().info("Successfully retrieved EventGrid configuration from Spring context");
         } catch (Exception e) {
             context.getLogger().warning("Error retrieving EventGrid config from Spring context: " + e.getMessage());
@@ -460,22 +460,6 @@ public class Function {
         try {
             context.getLogger().info("Java HTTP trigger processed a request to produce delete bodega event.");
             
-            String eventGridTopicEndpoint = null;
-            String eventGridTopicKey = null;
-            
-            try {
-                org.springframework.context.ApplicationContext springCtx = SpringContextSingleton.getContext();
-                EventGridConfig eventGridConfig = springCtx.getBean(EventGridConfig.class);
-                eventGridTopicEndpoint = eventGridConfig.getTopicEndpoint();
-                eventGridTopicKey = eventGridConfig.getTopicKey();
-                context.getLogger().info("Successfully retrieved EventGrid configuration from Spring context");
-            } catch (Exception e) {
-                context.getLogger().warning("Error retrieving EventGrid config from Spring context: " + e.getMessage());
-                // Fallback to environment variables
-                eventGridTopicEndpoint = System.getenv("EVENTGRID_TOPIC_ENDPOINT");
-                eventGridTopicKey = System.getenv("EVENTGRID_KEY");
-                context.getLogger().info("Using environment variables for EventGrid configuration");
-            }
 
             if (id == null) {
                 return request.createResponseBuilder(HttpStatus.BAD_REQUEST)
