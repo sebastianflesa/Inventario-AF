@@ -66,12 +66,12 @@
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.33</version>
         </dependency>
-        <!-- Spring Boot Starter Web -->
+        <!-- Spring Boot Starter Web
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
             <version>3.3.0</version>
-        </dependency>
+        </dependency> -->
         <!-- Lombok for model annotations -->
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -91,6 +91,13 @@
             <groupId>com.oracle.database.security</groupId>
             <artifactId>oraclepki</artifactId>
             <version>23.4.0.24.05</version>
+        </dependency>
+
+                <!-- GraphQL Java -->
+        <dependency>
+            <groupId>com.graphql-java</groupId>
+            <artifactId>graphql-java</artifactId>
+            <version>21.0</version>
         </dependency>
         
       
