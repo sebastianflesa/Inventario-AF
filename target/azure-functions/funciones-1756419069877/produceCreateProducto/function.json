@@ -1,0 +1,16 @@
+{
+  "scriptFile" : "../funciones-1.0-SNAPSHOT.jar",
+  "entryPoint" : "com.function.Function.produceCreateProducto",
+  "bindings" : [ {
+    "type" : "httpTrigger",
+    "direction" : "in",
+    "name" : "req",
+    "route" : "produceCreateProducto",
+    "methods" : [ "POST" ],
+    "authLevel" : "ANONYMOUS"
+  }, {
+    "type" : "http",
+    "direction" : "out",
+    "name" : "$return"
+  } ]
+}

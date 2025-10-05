@@ -8,7 +8,7 @@ import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
 @EnableJpaRepositories(basePackages = "com.function.models")
-@ComponentScan(basePackages = {"com.function", "com.function.models", "com.function.controllers"})
+@ComponentScan(basePackages = {"com.function", "com.function.config", "com.function.models", "com.function.controllers"})
 public class SpringContextSingleton {
     private static ApplicationContext context;
 
