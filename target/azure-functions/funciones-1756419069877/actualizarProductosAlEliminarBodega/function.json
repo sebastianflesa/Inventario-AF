@@ -1,0 +1,16 @@
+{
+  "scriptFile" : "../funciones-1.0-SNAPSHOT.jar",
+  "entryPoint" : "com.function.ActualizarProductosAlEliminarBodegaFunction.run",
+  "bindings" : [ {
+    "type" : "httpTrigger",
+    "direction" : "in",
+    "name" : "req",
+    "route" : "events/bodegaEliminada",
+    "methods" : [ "POST" ],
+    "authLevel" : "FUNCTION"
+  }, {
+    "type" : "http",
+    "direction" : "out",
+    "name" : "$return"
+  } ]
+}

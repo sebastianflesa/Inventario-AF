@@ -1,5 +1,7 @@
 com\function\Function$13.class
 com\function\Function$1.class
+com\function\GraphQLBodegasFunction.class
+com\function\GraphQLProductosFunction.class
 com\function\Function$6.class
 com\function\Function$15.class
 com\function\Function$11.class
@@ -14,6 +16,7 @@ com\function\Function$18.class
 bodeguita\InventarioBodegaFunc.class
 com\function\models\ProductoRepository.class
 com\function\Function$7.class
+com\function\GraphQLFunction.class
 com\function\models\BodegaEntity.class
 com\function\config\EventGridConfig.class
 com\function\controllers\BodegaController.class
@@ -21,7 +24,10 @@ com\function\Function$14.class
 com\function\Function$12.class
 com\function\Function$19.class
 com\function\Function$5.class
+com\function\ActualizarProductosAlEliminarBodegaFunction.class
+com\function\AsignarBodegaPorDefectoFunction.class
 com\function\Function$9.class
+com\function\EventGridPublisher.class
 com\function\Function$3.class
 com\function\models\BodegaRepository.class
 com\function\SpringContextSingleton.class

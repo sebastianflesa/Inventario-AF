@@ -3,6 +3,8 @@
   "Values": {
     "FUNCTIONS_WORKER_RUNTIME": "java",
     "AzureWebJobsSecretStorageType": "Files",
-    "AzureWebJobsStorage": "UseDevelopmentStorage=true"
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "EVENTGRID_TOPIC_ENDPOINT": "https://bodegas.eastus2-1.eventgrid.azure.net/api/events",
+    "EVENTGRID_KEY": "9SpxaQs41IUMY7lvVJRRIR2DNrjdUELMr7HRNRTL3VxkeRgGRTHUJQQJ99BJACHYHv6XJ3w3AAABAZEGsuDT"
   }
 }
